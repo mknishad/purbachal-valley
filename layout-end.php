@@ -1,8 +1,8 @@
 </div>
-            </div>
+            </main>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= htmlspecialchars($assetBase . '/assets/vendor/bootstrap/js/bootstrap.bundle.min.js?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

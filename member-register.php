@@ -1,31 +1,30 @@
+<?php
+$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+$assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
+$assetVersion = '20260625b';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Registration - MR PURBACHAL VALLEY</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= htmlspecialchars($assetBase . '/assets/vendor/bootstrap/css/bootstrap.min.css?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <style>
-        body { background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%); min-height: 100vh; padding: 30px 0; }
-        .reg-card { background: white; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-width: 900px; margin: 0 auto; }
-        .reg-header { background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%); color: white; padding: 25px; border-radius: 15px 15px 0 0; text-align: center; }
-        .reg-body { padding: 30px; }
-        .form-control:focus { border-color: #1a472a; box-shadow: 0 0 0 0.2rem rgba(26,71,42,0.25); }
-        .btn-primary { background: #1a472a; border-color: #1a472a; }
-        .btn-primary:hover { background: #2d5a3f; border-color: #2d5a3f; }
-        .password-wrapper { position: relative; }
-        .password-wrapper .form-control { padding-right: 45px; }
-        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d; }
-    </style>
+    <link rel="stylesheet" href="<?= htmlspecialchars($assetBase . '/assets/css/style.css?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>">
 </head>
-<body>
+<body class="auth-page">
     <div class="container">
         <div class="reg-card">
             <div class="reg-header">
-                <h4><i class="fas fa-building"></i> MR PURBACHAL VALLEY</h4>
-                <p class="mb-0">Member Registration</p>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="brand-mark"><i class="fas fa-building"></i></div>
+                    <div>
+                        <h4>MR PURBACHAL VALLEY</h4>
+                        <p>Member Registration</p>
+                    </div>
+                </div>
             </div>
             <div class="reg-body">
                 <?php
