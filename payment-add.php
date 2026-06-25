@@ -1,16 +1,8 @@
 <?php
 require_once 'auth.php';
+require_once 'functions.php';
 requireLogin();
 requireRole(['admin', 'accountant']);
-
-$pageTitle = 'Add Payment';
-require_once 'layout.php';
-
-$memberId = sanitize($_GET['member_id'] ?? '');
-$projectId = sanitize($_GET['project_id'] ?? '');
-
-$members = $pdo->query("SELECT id, first_name, last_name, membership_number FROM members WHERE member_status = 'active' ORDER BY first_name")->fetchAll();
-$projects = $pdo->query("SELECT id, project_name FROM projects WHERE status != 'completed' ORDER BY project_name")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $memberId = sanitize($_POST['member_id']);
@@ -26,6 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (empty($memberId) || empty($amount) || empty($paymentDate)) {
         $_SESSION['error'] = 'Please fill required fields';
+        redirect(BASE_URL . '/payment-add.php');
+    }
+
+    $date = DateTime::createFromFormat('Y-m-d', $paymentDate);
+    if (!$date || $date->format('Y-m-d') !== $paymentDate) {
+        $_SESSION['error'] = 'Payment date must be a valid date in YYYY-MM-DD format';
         redirect(BASE_URL . '/payment-add.php');
     }
     
@@ -51,6 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['success'] = 'Payment added successfully! Payment No: ' . $paymentNumber;
     redirect(BASE_URL . '/payments.php');
 }
+
+$pageTitle = 'Add Payment';
+require_once 'layout.php';
+
+$memberId = sanitize($_GET['member_id'] ?? '');
+$projectId = sanitize($_GET['project_id'] ?? '');
+
+$members = $pdo->query("SELECT id, first_name, last_name, membership_number FROM members WHERE member_status = 'active' ORDER BY first_name")->fetchAll();
+$projects = $pdo->query("SELECT id, project_name FROM projects WHERE status != 'completed' ORDER BY project_name")->fetchAll();
 ?>
 
 <div class="row">
