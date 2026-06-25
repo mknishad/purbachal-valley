@@ -1,10 +1,8 @@
 <?php
 require_once 'auth.php';
+require_once 'functions.php';
 requireLogin();
 requireRole(['admin', 'accountant']);
-
-$pageTitle = 'Add New Member';
-require_once 'layout.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = sanitize($_POST['first_name']);
@@ -31,6 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['error'] = 'Name and phone are required';
         redirect(BASE_URL . '/member-add.php');
     }
+
+    $gender = $gender !== '' ? $gender : null;
+    $dateOfBirth = $dateOfBirth !== '' ? $dateOfBirth : null;
+
+    if ($dateOfBirth !== null) {
+        $date = DateTime::createFromFormat('Y-m-d', $dateOfBirth);
+        if (!$date || $date->format('Y-m-d') !== $dateOfBirth) {
+            $_SESSION['error'] = 'Date of birth must be a valid date in YYYY-MM-DD format';
+            redirect(BASE_URL . '/member-add.php');
+        }
+    }
     
     $membershipNumber = generateMembershipNumber();
     
@@ -53,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['success'] = 'Member added successfully! Membership: ' . $membershipNumber;
     redirect(BASE_URL . '/members.php');
 }
+
+$pageTitle = 'Add New Member';
+require_once 'layout.php';
 ?>
 
 <div class="row">
