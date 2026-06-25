@@ -24,7 +24,7 @@ try {
 }
 
 function sanitize($data) {
-    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars(trim((string) ($data ?? '')), ENT_QUOTES, 'UTF-8');
 }
 
 function redirect($url) {
