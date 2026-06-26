@@ -27,6 +27,33 @@
                     }
                 });
             });
+
+            const sidebarToggle = document.querySelector('[data-sidebar-toggle]');
+            const sidebarCloseTargets = document.querySelectorAll('[data-sidebar-close], .sidebar a');
+            const setSidebarOpen = function(isOpen) {
+                document.body.classList.toggle('sidebar-open', isOpen);
+                if (sidebarToggle) {
+                    sidebarToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                }
+            };
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    setSidebarOpen(!document.body.classList.contains('sidebar-open'));
+                });
+            }
+
+            sidebarCloseTargets.forEach(function(target) {
+                target.addEventListener('click', function() {
+                    setSidebarOpen(false);
+                });
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    setSidebarOpen(false);
+                }
+            });
         });
     </script>
     <?php if (isset($extraJs)): ?>

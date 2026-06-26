@@ -9,7 +9,7 @@ $userFullName = $_SESSION['full_name'] ?? 'User';
 $currentPage = basename($_SERVER['PHP_SELF']);
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
-$assetVersion = '20260625b';
+$assetVersion = '20260626a';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,8 +24,9 @@ $assetVersion = '20260625b';
 </head>
 <body>
     <div class="container-fluid app-shell">
-        <div class="row">
-            <aside class="col-md-3 col-xl-2 sidebar p-0">
+        <div class="sidebar-backdrop" data-sidebar-close></div>
+        <div class="row app-layout">
+            <aside class="col-md-3 col-xl-2 sidebar p-0" id="appSidebar">
                 <div class="sidebar-brand">
                     <div class="brand-mark"><i class="fas fa-building"></i></div>
                     <div>
@@ -71,9 +72,14 @@ $assetVersion = '20260625b';
             </aside>
             <main class="col-md-9 col-xl-10 p-0 app-main">
                 <div class="topbar d-flex justify-content-between align-items-center px-4 py-3">
-                    <div>
-                        <span class="page-kicker">Investment Management</span>
-                        <h5 class="mb-0"><?= $pageTitle ?? 'Dashboard' ?></h5>
+                    <div class="d-flex align-items-center gap-3 min-w-0">
+                        <button type="button" class="btn btn-light mobile-menu-btn" aria-label="Open navigation" aria-controls="appSidebar" aria-expanded="false" data-sidebar-toggle>
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div class="min-w-0">
+                            <span class="page-kicker">Investment Management</span>
+                            <h5 class="mb-0 text-truncate"><?= $pageTitle ?? 'Dashboard' ?></h5>
+                        </div>
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="dropdown">

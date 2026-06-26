@@ -1,7 +1,7 @@
 <?php
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
-$assetVersion = '20260625b';
+$assetVersion = '20260626a';
 ?>
 <!DOCTYPE html>
 <html lang="en">
