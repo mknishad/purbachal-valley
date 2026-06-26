@@ -440,6 +440,69 @@ a:hover {
     font-weight: 800;
 }
 
+.member-summary-stack {
+    display: grid;
+    gap: 16px;
+}
+
+.member-summary-meta {
+    display: grid;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.member-summary-meta i {
+    width: 18px;
+    color: var(--brand-green-2);
+}
+
+.summary-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.summary-metric {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #f8faf7;
+    padding: 10px;
+}
+
+.summary-metric span,
+.summary-payment-item span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.summary-metric strong,
+.summary-payment-item strong {
+    color: var(--ink);
+    font-size: 13px;
+}
+
+.summary-section-title {
+    color: #3b4b43;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.summary-payment-list {
+    display: grid;
+    gap: 8px;
+}
+
+.summary-payment-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+}
+
 .alert {
     border-radius: 8px;
     border-width: 1px;

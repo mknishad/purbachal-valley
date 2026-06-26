@@ -9,7 +9,7 @@ $userFullName = $_SESSION['full_name'] ?? 'User';
 $currentPage = basename($_SERVER['PHP_SELF']);
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
-$assetVersion = '20260626b';
+$assetVersion = '20260626c';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,6 +50,9 @@ $assetVersion = '20260626b';
                     <li><a href="expenses.php" class="<?= $currentPage === 'expenses.php' ? 'active' : '' ?>"><i class="fas fa-file-invoice-dollar me-2"></i> Expenses</a></li>
                     <?php endif; ?>
                     <li><a href="my-payments.php" class="<?= $currentPage === 'my-payments.php' ? 'active' : '' ?>"><i class="fas fa-history me-2"></i> My Payments</a></li>
+                    <?php if ($currentUserRole === 'member'): ?>
+                    <li><a href="payment-add.php" class="<?= $currentPage === 'payment-add.php' ? 'active' : '' ?>"><i class="fas fa-plus-circle me-2"></i> Submit Payment</a></li>
+                    <?php endif; ?>
                     <?php if (in_array($currentUserRole, ['admin'])): ?>
                     <li class="nav-header">Projects</li>
                     <li><a href="projects.php" class="<?= $currentPage === 'projects.php' ? 'active' : '' ?>"><i class="fas fa-building me-2"></i> Projects</a></li>

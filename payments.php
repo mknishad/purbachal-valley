@@ -107,7 +107,8 @@ $projects = $pdo->query("SELECT id, project_name FROM projects WHERE status != '
                         <td>
                             <a href="receipt.php?id=<?= $payment['id'] ?>" class="btn btn-sm btn-info" target="_blank"><i class="fas fa-print"></i></a>
                             <?php if ($payment['approval_status'] === 'pending'): ?>
-                            <a href="payment-approve.php?id=<?= $payment['id'] ?>" class="btn btn-sm btn-success"><i class="fas fa-check"></i></a>
+                            <a href="payment-approve.php?id=<?= $payment['id'] ?>&action=approve" class="btn btn-sm btn-success" onclick="return confirm('Approve this payment?')"><i class="fas fa-check"></i></a>
+                            <a href="payment-approve.php?id=<?= $payment['id'] ?>&action=reject" class="btn btn-sm btn-danger" onclick="return confirm('Reject this payment?')"><i class="fas fa-times"></i></a>
                             <?php endif; ?>
                         </td>
                     </tr>

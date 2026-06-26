@@ -41,7 +41,8 @@ if ($currentUserRole === 'member') {
                 <h4>Welcome back, <?php echo sanitize($_SESSION['full_name']); ?>.</h4>
                 <p>View your own investment summary, paid amount, due balance, and recent payment history.</p>
             </div>
-            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <div class="col-lg-4 d-flex justify-content-lg-end gap-2 flex-wrap mt-3 mt-lg-0">
+                <a href="payment-add.php" class="btn btn-primary"><i class="fas fa-plus"></i> Submit Payment</a>
                 <a href="my-payments.php" class="btn btn-warning"><i class="fas fa-history"></i> My Payments</a>
             </div>
         </div>

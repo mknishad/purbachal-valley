@@ -61,7 +61,12 @@ if ($member) {
 
 <div class="card">
     <div class="card-header">
-        <h5 class="mb-0">Payment History</h5>
+        <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+            <h5 class="mb-0">Payment History</h5>
+            <?php if (getCurrentUserRole() === 'member'): ?>
+            <a href="payment-add.php" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Submit Payment</a>
+            <?php endif; ?>
+        </div>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
