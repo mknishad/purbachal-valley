@@ -1,5 +1,7 @@
 <?php
-require_once 'config.php';
+require_once 'auth.php';
+require_once 'functions.php';
+requireLogin();
 
 $paymentId = intval($_GET['id'] ?? 0);
 
@@ -17,6 +19,17 @@ $payment = $stmt->fetch();
 
 if (!$payment) {
     die('Payment not found');
+}
+
+if (getCurrentUserRole() === 'member') {
+    $memberStmt = $pdo->prepare("SELECT id FROM members WHERE user_id = ?");
+    $memberStmt->execute([getCurrentUserId()]);
+    $member = $memberStmt->fetch();
+
+    if (!$member || intval($payment['member_id']) !== intval($member['id'])) {
+        http_response_code(403);
+        die('Access denied');
+    }
 }
 
 $orgName = getSetting('organization_name', 'MR PURBACHAL VALLEY');

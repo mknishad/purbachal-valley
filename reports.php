@@ -2,7 +2,7 @@
 require_once 'auth.php';
 require_once 'functions.php';
 requireLogin();
-requireRole(['admin', 'accountant', 'member']);
+requireRole(['admin', 'accountant']);
 
 $pageTitle = 'Reports';
 require_once 'layout.php';

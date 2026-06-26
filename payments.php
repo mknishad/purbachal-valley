@@ -1,7 +1,12 @@
 <?php
 require_once 'auth.php';
 requireLogin();
-requireRole(['admin', 'accountant', 'member']);
+
+if (getCurrentUserRole() === 'member') {
+    redirect(BASE_URL . '/my-payments.php');
+}
+
+requireRole(['admin', 'accountant']);
 
 $pageTitle = 'Payments';
 require_once 'layout.php';
