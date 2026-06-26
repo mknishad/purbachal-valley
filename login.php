@@ -52,12 +52,6 @@ $assetVersion = '20260625b';
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </button>
                         </form>
-                        <div class="text-center mt-3">
-                            <small class="auth-meta">Default: admin / admin123</small>
-                        </div>
-                        <div class="text-center mt-3">
-                            <p>New member? <a href="member-register.php" class="text-success">Register here</a></p>
-                        </div>
                     </div>
                 </div>
             </div>
