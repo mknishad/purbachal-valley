@@ -365,6 +365,27 @@ a:hover {
     border-color: #0b3024;
 }
 
+.btn-outline-primary {
+    --bs-btn-color: var(--brand-green);
+    --bs-btn-border-color: var(--brand-green);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--brand-green);
+    --bs-btn-hover-border-color: var(--brand-green);
+    --bs-btn-focus-shadow-rgb: 15, 61, 46;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--brand-green);
+    --bs-btn-active-border-color: var(--brand-green);
+    --bs-btn-disabled-color: var(--brand-green);
+    --bs-btn-disabled-border-color: var(--brand-green);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    color: #fff;
+    background: var(--brand-green);
+    border-color: var(--brand-green);
+}
+
 .btn-success {
     background: var(--success);
     border-color: var(--success);

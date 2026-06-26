@@ -231,7 +231,7 @@ require_once 'layout.php';
 
             <div class="col-md-12 text-end">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
-                <a href="member-view.php?id=<?php echo $memberId; ?>" class="btn btn-secondary">Cancel</a>
+                <a href="member-view.php?id=<?php echo $memberId; ?>" class="btn btn-outline-primary">Cancel</a>
             </div>
         </form>
     </div>

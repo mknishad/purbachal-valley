@@ -124,7 +124,7 @@ $projects = $pdo->query("SELECT id, project_name FROM projects WHERE status != '
                     </div>
                     <div class="col-md-12 text-end">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Payment</button>
-                        <a href="payments.php" class="btn btn-secondary">Cancel</a>
+                        <a href="payments.php" class="btn btn-outline-primary">Cancel</a>
                     </div>
                 </form>
             </div>
