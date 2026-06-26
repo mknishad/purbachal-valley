@@ -24,9 +24,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nomineeRelation = sanitize($_POST['nominee_relation'] ?? '');
     $nomineeNid = sanitize($_POST['nominee_nid'] ?? '');
     $nomineePhone = sanitize($_POST['nominee_phone'] ?? '');
+    $password = $_POST['password'] ?? '';
     
-    if (empty($firstName) || empty($phone)) {
-        $_SESSION['error'] = 'Name and phone are required';
+    $requiredFields = [
+        $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
+        $nidNumber, $email, $phone, $alternativePhone, $presentAddress, $permanentAddress,
+        $occupation, $employerName, $investmentType, $nomineeName, $nomineeRelation,
+        $nomineeNid, $nomineePhone, $password
+    ];
+
+    foreach ($requiredFields as $field) {
+        if (trim((string) $field) === '') {
+            $_SESSION['error'] = 'Please fill all required fields';
+            redirect(BASE_URL . '/member-add.php');
+        }
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = 'Please enter a valid email address';
+        redirect(BASE_URL . '/member-add.php');
+    }
+
+    if (strlen($password) < 6) {
+        $_SESSION['error'] = 'Password must be at least 6 characters';
         redirect(BASE_URL . '/member-add.php');
     }
 
@@ -40,24 +60,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             redirect(BASE_URL . '/member-add.php');
         }
     }
+
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ? OR phone = ? LIMIT 1");
+    $stmt->execute([$phone, $email, $phone]);
+    if ($stmt->fetch()) {
+        $_SESSION['error'] = 'A user with this email or phone already exists';
+        redirect(BASE_URL . '/member-add.php');
+    }
+
+    $stmt = $pdo->prepare("SELECT id FROM members WHERE email = ? OR phone = ? LIMIT 1");
+    $stmt->execute([$email, $phone]);
+    if ($stmt->fetch()) {
+        $_SESSION['error'] = 'A member with this email or phone already exists';
+        redirect(BASE_URL . '/member-add.php');
+    }
     
     $membershipNumber = generateMembershipNumber();
+    $fullName = trim($firstName . ' ' . $lastName);
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
     
-    $stmt = $pdo->prepare("INSERT INTO members (
-        membership_number, first_name, last_name, father_name, mother_name, gender, date_of_birth,
-        nid_number, email, phone, alternative_phone, present_address, permanent_address,
-        occupation, employer_name, investment_type, nominee_name, nominee_relation, nominee_nid, nominee_phone,
-        member_status, registration_date, kyc_status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', CURDATE(), 'pending')");
-    
-    $stmt->execute([
-        $membershipNumber, $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
-        $nidNumber, $email, $phone, $alternativePhone, $presentAddress, $permanentAddress,
-        $occupation, $employerName, $investmentType, $nomineeName, $nomineeRelation, $nomineeNid, $nomineePhone
-    ]);
-    
-    $memberId = $pdo->lastInsertId();
-    logAudit('CREATE', 'members', $memberId);
+    $pdo->beginTransaction();
+    try {
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, role, full_name, phone, status) VALUES (?, ?, ?, 'member', ?, ?, 'active')");
+        $stmt->execute([$phone, $email, $passwordHash, $fullName, $phone]);
+        $userId = $pdo->lastInsertId();
+
+        $stmt = $pdo->prepare("INSERT INTO members (
+            membership_number, user_id, first_name, last_name, father_name, mother_name, gender, date_of_birth,
+            nid_number, email, phone, alternative_phone, present_address, permanent_address,
+            occupation, employer_name, investment_type, nominee_name, nominee_relation, nominee_nid, nominee_phone,
+            member_status, registration_date, kyc_status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', CURDATE(), 'pending')");
+
+        $stmt->execute([
+            $membershipNumber, $userId, $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
+            $nidNumber, $email, $phone, $alternativePhone, $presentAddress, $permanentAddress,
+            $occupation, $employerName, $investmentType, $nomineeName, $nomineeRelation, $nomineeNid, $nomineePhone
+        ]);
+
+        $memberId = $pdo->lastInsertId();
+        logAudit('CREATE', 'members', $memberId);
+        logAudit('CREATE', 'users', $userId);
+        $pdo->commit();
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $_SESSION['error'] = 'Failed to add member. Please check the email and phone are unique.';
+        redirect(BASE_URL . '/member-add.php');
+    }
     
     $_SESSION['success'] = 'Member added successfully! Membership: ' . $membershipNumber;
     redirect(BASE_URL . '/members.php');
@@ -80,12 +129,12 @@ require_once 'layout.php';
                         <input type="text" name="first_name" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Last Name</label>
-                        <input type="text" name="last_name" class="form-control">
+                        <label class="form-label">Last Name *</label>
+                        <input type="text" name="last_name" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Gender</label>
-                        <select name="gender" class="form-select">
+                        <label class="form-label">Gender *</label>
+                        <select name="gender" class="form-select" required>
                             <option value="">Select</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
@@ -93,73 +142,80 @@ require_once 'layout.php';
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Father's Name</label>
-                        <input type="text" name="father_name" class="form-control">
+                        <label class="form-label">Father's Name *</label>
+                        <input type="text" name="father_name" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Mother's Name</label>
-                        <input type="text" name="mother_name" class="form-control">
+                        <label class="form-label">Mother's Name *</label>
+                        <input type="text" name="mother_name" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Date of Birth</label>
-                        <input type="text" name="date_of_birth" class="form-control datepicker">
+                        <label class="form-label">Date of Birth *</label>
+                        <input type="text" name="date_of_birth" class="form-control datepicker" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">NID Number</label>
-                        <input type="text" name="nid_number" class="form-control">
+                        <label class="form-label">NID Number *</label>
+                        <input type="text" name="nid_number" class="form-control" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Phone *</label>
                         <input type="tel" name="phone" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control">
+                        <label class="form-label">Email *</label>
+                        <input type="email" name="email" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Alternative Phone</label>
-                        <input type="tel" name="alternative_phone" class="form-control">
+                        <label class="form-label">Password *</label>
+                        <div class="password-wrapper">
+                            <input type="password" name="password" class="form-control" required minlength="6">
+                            <i class="fas fa-eye toggle-password"></i>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Occupation</label>
-                        <input type="text" name="occupation" class="form-control">
+                        <label class="form-label">Alternative Phone *</label>
+                        <input type="tel" name="alternative_phone" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Employer Name</label>
-                        <input type="text" name="employer_name" class="form-control">
+                        <label class="form-label">Occupation *</label>
+                        <input type="text" name="occupation" class="form-control" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Investment Type</label>
-                        <select name="investment_type" class="form-select">
+                        <label class="form-label">Employer Name *</label>
+                        <input type="text" name="employer_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Investment Type *</label>
+                        <select name="investment_type" class="form-select" required>
                             <option value="individual">Individual</option>
                             <option value="group">Group</option>
                             <option value="organization">Organization</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Present Address</label>
-                        <textarea name="present_address" class="form-control" rows="2"></textarea>
+                        <label class="form-label">Present Address *</label>
+                        <textarea name="present_address" class="form-control" rows="2" required></textarea>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Permanent Address</label>
-                        <textarea name="permanent_address" class="form-control" rows="2"></textarea>
+                        <label class="form-label">Permanent Address *</label>
+                        <textarea name="permanent_address" class="form-control" rows="2" required></textarea>
                     </div>
                     <div class="col-md-12"><h6 class="mt-3 mb-2 border-bottom pb-2">Nominee Information</h6></div>
                     <div class="col-md-3">
-                        <label class="form-label">Nominee Name</label>
-                        <input type="text" name="nominee_name" class="form-control">
+                        <label class="form-label">Nominee Name *</label>
+                        <input type="text" name="nominee_name" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Relation</label>
-                        <input type="text" name="nominee_relation" class="form-control" placeholder="e.g., Father, Wife">
+                        <label class="form-label">Relation *</label>
+                        <input type="text" name="nominee_relation" class="form-control" placeholder="e.g., Father, Wife" required>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Nominee NID</label>
-                        <input type="text" name="nominee_nid" class="form-control">
+                        <label class="form-label">Nominee NID *</label>
+                        <input type="text" name="nominee_nid" class="form-control" required>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Nominee Phone</label>
-                        <input type="tel" name="nominee_phone" class="form-control">
+                        <label class="form-label">Nominee Phone *</label>
+                        <input type="tel" name="nominee_phone" class="form-control" required>
                     </div>
                     <div class="col-md-12 text-end">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Member</button>

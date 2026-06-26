@@ -9,12 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     
     if (empty($username) || empty($password)) {
-        $_SESSION['error'] = 'Username and password are required';
+        $_SESSION['error'] = 'Email or phone and password are required';
         redirect(BASE_URL . '/login.php');
     }
     
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND status = 'active'");
-    $stmt->execute([$username, $username]);
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE (username = ? OR email = ? OR phone = ?) AND status = 'active'");
+    $stmt->execute([$username, $username, $username]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password_hash'])) {
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         redirect(BASE_URL . '/dashboard.php');
     } else {
-        $_SESSION['error'] = 'Invalid username or password';
+        $_SESSION['error'] = 'Invalid email, phone, or password';
         redirect(BASE_URL . '/login.php');
     }
 } else {

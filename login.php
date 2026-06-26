@@ -38,7 +38,7 @@ $assetVersion = '20260626a';
                         <?php endif; ?>
                         <form method="POST" action="authenticate.php">
                             <div class="mb-3">
-                                <label class="form-label">Username or Email</label>
+                                <label class="form-label">Email or Phone</label>
                                 <input type="text" name="username" class="form-control" required>
                             </div>
                             <div class="mb-3">
