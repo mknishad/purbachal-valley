@@ -42,8 +42,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $memberStatus = sanitize($_POST['member_status'] ?? 'active');
     $kycStatus = sanitize($_POST['kyc_status'] ?? 'pending');
 
-    if (empty($firstName) || empty($phone)) {
-        $_SESSION['error'] = 'Name and phone are required';
+    $requiredFields = [
+        $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
+        $nidNumber, $email, $phone, $alternativePhone, $presentAddress, $permanentAddress,
+        $occupation, $employerName, $investmentType, $nomineeName, $nomineeRelation,
+        $nomineeNid, $nomineePhone, $memberStatus, $kycStatus
+    ];
+
+    foreach ($requiredFields as $field) {
+        if (trim((string) $field) === '') {
+            $_SESSION['error'] = 'Please fill all required fields';
+            redirect(BASE_URL . '/member-edit.php?id=' . $memberId);
+        }
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = 'Please enter a valid email address';
         redirect(BASE_URL . '/member-edit.php?id=' . $memberId);
     }
 
@@ -111,12 +125,12 @@ require_once 'layout.php';
                 <input type="text" name="first_name" class="form-control" value="<?php echo sanitize($member['first_name']); ?>" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Last Name</label>
-                <input type="text" name="last_name" class="form-control" value="<?php echo sanitize($member['last_name']); ?>">
+                <label class="form-label">Last Name *</label>
+                <input type="text" name="last_name" class="form-control" value="<?php echo sanitize($member['last_name']); ?>" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Gender</label>
-                <select name="gender" class="form-select">
+                <label class="form-label">Gender *</label>
+                <select name="gender" class="form-select" required>
                     <option value="">Select</option>
                     <option value="male" <?php echo $member['gender'] === 'male' ? 'selected' : ''; ?>>Male</option>
                     <option value="female" <?php echo $member['gender'] === 'female' ? 'selected' : ''; ?>>Female</option>
@@ -125,63 +139,63 @@ require_once 'layout.php';
             </div>
 
             <div class="col-md-4">
-                <label class="form-label">Father's Name</label>
-                <input type="text" name="father_name" class="form-control" value="<?php echo sanitize($member['father_name']); ?>">
+                <label class="form-label">Father's Name *</label>
+                <input type="text" name="father_name" class="form-control" value="<?php echo sanitize($member['father_name']); ?>" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Mother's Name</label>
-                <input type="text" name="mother_name" class="form-control" value="<?php echo sanitize($member['mother_name']); ?>">
+                <label class="form-label">Mother's Name *</label>
+                <input type="text" name="mother_name" class="form-control" value="<?php echo sanitize($member['mother_name']); ?>" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Date of Birth</label>
-                <input type="text" name="date_of_birth" class="form-control datepicker" value="<?php echo sanitize($member['date_of_birth']); ?>">
+                <label class="form-label">Date of Birth *</label>
+                <input type="text" name="date_of_birth" class="form-control datepicker" value="<?php echo sanitize($member['date_of_birth']); ?>" required>
             </div>
 
             <div class="col-md-4">
-                <label class="form-label">NID Number</label>
-                <input type="text" name="nid_number" class="form-control" value="<?php echo sanitize($member['nid_number']); ?>">
+                <label class="form-label">NID Number *</label>
+                <input type="text" name="nid_number" class="form-control" value="<?php echo sanitize($member['nid_number']); ?>" required>
             </div>
             <div class="col-md-4">
                 <label class="form-label">Phone *</label>
                 <input type="tel" name="phone" class="form-control" value="<?php echo sanitize($member['phone']); ?>" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" value="<?php echo sanitize($member['email']); ?>">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" value="<?php echo sanitize($member['email']); ?>" required>
             </div>
 
             <div class="col-md-4">
-                <label class="form-label">Alternative Phone</label>
-                <input type="tel" name="alternative_phone" class="form-control" value="<?php echo sanitize($member['alternative_phone']); ?>">
+                <label class="form-label">Alternative Phone *</label>
+                <input type="tel" name="alternative_phone" class="form-control" value="<?php echo sanitize($member['alternative_phone']); ?>" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Occupation</label>
-                <input type="text" name="occupation" class="form-control" value="<?php echo sanitize($member['occupation']); ?>">
+                <label class="form-label">Occupation *</label>
+                <input type="text" name="occupation" class="form-control" value="<?php echo sanitize($member['occupation']); ?>" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Employer Name</label>
-                <input type="text" name="employer_name" class="form-control" value="<?php echo sanitize($member['employer_name']); ?>">
+                <label class="form-label">Employer Name *</label>
+                <input type="text" name="employer_name" class="form-control" value="<?php echo sanitize($member['employer_name']); ?>" required>
             </div>
 
             <div class="col-md-4">
-                <label class="form-label">Investment Type</label>
-                <select name="investment_type" class="form-select">
+                <label class="form-label">Investment Type *</label>
+                <select name="investment_type" class="form-select" required>
                     <option value="individual" <?php echo $member['investment_type'] === 'individual' ? 'selected' : ''; ?>>Individual</option>
                     <option value="group" <?php echo $member['investment_type'] === 'group' ? 'selected' : ''; ?>>Group</option>
                     <option value="organization" <?php echo $member['investment_type'] === 'organization' ? 'selected' : ''; ?>>Organization</option>
                 </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Member Status</label>
-                <select name="member_status" class="form-select">
+                <label class="form-label">Member Status *</label>
+                <select name="member_status" class="form-select" required>
                     <option value="active" <?php echo $member['member_status'] === 'active' ? 'selected' : ''; ?>>Active</option>
                     <option value="inactive" <?php echo $member['member_status'] === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
                     <option value="expelled" <?php echo $member['member_status'] === 'expelled' ? 'selected' : ''; ?>>Expelled</option>
                 </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">KYC Status</label>
-                <select name="kyc_status" class="form-select">
+                <label class="form-label">KYC Status *</label>
+                <select name="kyc_status" class="form-select" required>
                     <option value="pending" <?php echo $member['kyc_status'] === 'pending' ? 'selected' : ''; ?>>Pending</option>
                     <option value="verified" <?php echo $member['kyc_status'] === 'verified' ? 'selected' : ''; ?>>Verified</option>
                     <option value="rejected" <?php echo $member['kyc_status'] === 'rejected' ? 'selected' : ''; ?>>Rejected</option>
@@ -189,30 +203,30 @@ require_once 'layout.php';
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">Present Address</label>
-                <textarea name="present_address" class="form-control" rows="2"><?php echo sanitize($member['present_address']); ?></textarea>
+                <label class="form-label">Present Address *</label>
+                <textarea name="present_address" class="form-control" rows="2" required><?php echo sanitize($member['present_address']); ?></textarea>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Permanent Address</label>
-                <textarea name="permanent_address" class="form-control" rows="2"><?php echo sanitize($member['permanent_address']); ?></textarea>
+                <label class="form-label">Permanent Address *</label>
+                <textarea name="permanent_address" class="form-control" rows="2" required><?php echo sanitize($member['permanent_address']); ?></textarea>
             </div>
 
             <div class="col-md-12"><h6 class="mt-3 mb-2 border-bottom pb-2">Nominee Information</h6></div>
             <div class="col-md-3">
-                <label class="form-label">Nominee Name</label>
-                <input type="text" name="nominee_name" class="form-control" value="<?php echo sanitize($member['nominee_name']); ?>">
+                <label class="form-label">Nominee Name *</label>
+                <input type="text" name="nominee_name" class="form-control" value="<?php echo sanitize($member['nominee_name']); ?>" required>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Relation</label>
-                <input type="text" name="nominee_relation" class="form-control" value="<?php echo sanitize($member['nominee_relation']); ?>">
+                <label class="form-label">Relation *</label>
+                <input type="text" name="nominee_relation" class="form-control" value="<?php echo sanitize($member['nominee_relation']); ?>" required>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Nominee NID</label>
-                <input type="text" name="nominee_nid" class="form-control" value="<?php echo sanitize($member['nominee_nid']); ?>">
+                <label class="form-label">Nominee NID *</label>
+                <input type="text" name="nominee_nid" class="form-control" value="<?php echo sanitize($member['nominee_nid']); ?>" required>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Nominee Phone</label>
-                <input type="tel" name="nominee_phone" class="form-control" value="<?php echo sanitize($member['nominee_phone']); ?>">
+                <label class="form-label">Nominee Phone *</label>
+                <input type="tel" name="nominee_phone" class="form-control" value="<?php echo sanitize($member['nominee_phone']); ?>" required>
             </div>
 
             <div class="col-md-12 text-end">
