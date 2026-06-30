@@ -1,18 +1,18 @@
 :root {
-    --brand-green: #0f3d2e;
-    --brand-green-2: #185a42;
+    --brand-green: #063f45;
+    --brand-green-2: #0a5860;
     --brand-gold: #c9972f;
-    --ink: #16231d;
-    --muted: #68756f;
-    --line: #e4e9e5;
+    --ink: #13262a;
+    --muted: #64777a;
+    --line: #dfe9ea;
     --surface: #ffffff;
     --surface-soft: #f6f8f5;
-    --success: #1f8a5b;
+    --success: #1b8a6b;
     --info: #2364aa;
     --warning: #b56a11;
     --danger: #b33a3a;
-    --shadow-sm: 0 10px 25px rgba(18, 35, 29, 0.08);
-    --shadow-md: 0 18px 45px rgba(18, 35, 29, 0.12);
+    --shadow-sm: 0 10px 25px rgba(6, 35, 39, 0.09);
+    --shadow-md: 0 18px 45px rgba(6, 35, 39, 0.13);
 }
 
 * {
@@ -27,7 +27,7 @@ body {
     min-height: 100vh;
     margin: 0;
     background:
-        linear-gradient(180deg, rgba(15, 61, 46, 0.05), rgba(201, 151, 47, 0.04)),
+        linear-gradient(180deg, rgba(6, 63, 69, 0.06), rgba(201, 151, 47, 0.035)),
         var(--surface-soft);
     color: var(--ink);
     font-family: "Segoe UI", Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -67,8 +67,8 @@ a:hover {
     min-height: 100vh;
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
-        linear-gradient(160deg, #0b2d23 0%, var(--brand-green) 46%, #173b35 100%);
-    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.08), 14px 0 34px rgba(15, 61, 46, 0.08);
+        linear-gradient(160deg, #042d33 0%, var(--brand-green) 46%, #084e55 100%);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.08), 14px 0 34px rgba(6, 63, 69, 0.09);
     position: sticky;
     top: 0;
 }
@@ -260,7 +260,7 @@ a:hover {
     justify-content: center;
     border-radius: 8px;
     color: var(--brand-green);
-    background: rgba(24, 90, 66, 0.09);
+    background: rgba(10, 88, 96, 0.1);
 }
 
 .dashboard-hero {
@@ -268,7 +268,7 @@ a:hover {
     margin-bottom: 24px;
     color: #fff;
     background:
-        linear-gradient(135deg, rgba(15, 61, 46, 0.95), rgba(24, 90, 66, 0.94)),
+        linear-gradient(135deg, rgba(4, 45, 51, 0.97), rgba(10, 88, 96, 0.95)),
         linear-gradient(90deg, rgba(201, 151, 47, 0.22), transparent 45%);
     border-radius: 8px;
     box-shadow: var(--shadow-md);
@@ -334,7 +334,7 @@ a:hover {
 }
 
 .table-hover tbody tr:hover {
-    background-color: rgba(24, 90, 66, 0.045);
+    background-color: rgba(10, 88, 96, 0.06);
 }
 
 .btn {
@@ -361,8 +361,8 @@ a:hover {
 
 .btn-primary:hover,
 .btn-primary:focus {
-    background: #0b3024;
-    border-color: #0b3024;
+    background: #042d33;
+    border-color: #042d33;
 }
 
 .btn-outline-primary {
@@ -371,7 +371,7 @@ a:hover {
     --bs-btn-hover-color: #fff;
     --bs-btn-hover-bg: var(--brand-green);
     --bs-btn-hover-border-color: var(--brand-green);
-    --bs-btn-focus-shadow-rgb: 15, 61, 46;
+    --bs-btn-focus-shadow-rgb: 6, 63, 69;
     --bs-btn-active-color: #fff;
     --bs-btn-active-bg: var(--brand-green);
     --bs-btn-active-border-color: var(--brand-green);
@@ -426,7 +426,7 @@ a:hover {
 .form-control:focus,
 .form-select:focus {
     border-color: var(--brand-green-2);
-    box-shadow: 0 0 0 0.2rem rgba(24, 90, 66, 0.13);
+    box-shadow: 0 0 0 0.2rem rgba(10, 88, 96, 0.16);
 }
 
 .flatpickr-input {
@@ -545,7 +545,7 @@ a:hover {
 
 .project-picker-option:hover,
 .project-picker-option:focus {
-    background: rgba(24, 90, 66, 0.08);
+    background: rgba(10, 88, 96, 0.1);
 }
 
 .project-picker-option .form-check-input {
@@ -609,7 +609,7 @@ a:hover {
     align-items: center;
     padding: 40px 0;
     background:
-        linear-gradient(135deg, rgba(15, 61, 46, 0.96), rgba(12, 39, 32, 0.96)),
+        linear-gradient(135deg, rgba(4, 45, 51, 0.98), rgba(6, 63, 69, 0.97)),
         linear-gradient(90deg, rgba(201, 151, 47, 0.24), transparent 58%);
 }
 
@@ -624,7 +624,7 @@ a:hover {
 .auth-header {
     padding: 32px;
     color: #fff;
-    background: linear-gradient(135deg, #0f3d2e, #185a42);
+    background: linear-gradient(135deg, #042d33, #0a5860);
 }
 
 .auth-header h3,
@@ -671,7 +671,7 @@ a:hover {
     padding: 32px;
     color: white;
     text-align: left;
-    background: linear-gradient(135deg, #0f3d2e, #185a42);
+    background: linear-gradient(135deg, #042d33, #0a5860);
 }
 
 .login-header h3,

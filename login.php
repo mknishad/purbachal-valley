@@ -2,7 +2,7 @@
 session_start();
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
-$assetVersion = '20260630b';
+$assetVersion = '20260630d';
 ?>
 <!DOCTYPE html>
 <html lang="en">

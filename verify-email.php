@@ -32,9 +32,9 @@ if ($member['email_verified'] === 'yes') {
     <title>Email Verification - MR PURBACHAL VALLEY</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        body { background: linear-gradient(135deg, #042d33 0%, #0a5860 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
         .verify-card { background: white; border-radius: 15px; padding: 40px; max-width: 500px; text-align: center; }
-        .btn-primary { background: #1a472a; border-color: #1a472a; }
+        .btn-primary { background: #063f45; border-color: #063f45; }
     </style>
 </head>
 <body>

@@ -38,11 +38,11 @@ $assignedProjectNames = array_map(function ($project) {
             body { padding: 0; }
         }
         .member-details { max-width: 800px; margin: 0 auto; padding: 20px; }
-        .header { text-align: center; border-bottom: 2px solid #1a472a; padding-bottom: 15px; margin-bottom: 20px; }
-        .section-title { background: #1a472a; color: white; padding: 8px 15px; margin: 20px 0 10px; }
+        .header { text-align: center; border-bottom: 2px solid #063f45; padding-bottom: 15px; margin-bottom: 20px; }
+        .section-title { background: #063f45; color: white; padding: 8px 15px; margin: 20px 0 10px; }
         .info-table td { padding: 8px; border-bottom: 1px solid #eee; }
         .info-table td:first-child { font-weight: 600; width: 200px; background: #f8f9fa; }
-        .photo-section img { max-width: 150px; max-height: 150px; border: 2px solid #1a472a; }
+        .photo-section img { max-width: 150px; max-height: 150px; border: 2px solid #063f45; }
         .signature-img { max-width: 200px; height: 80px; border: 1px solid #ccc; }
         .print-btn { position: fixed; top: 20px; right: 20px; }
     </style>
