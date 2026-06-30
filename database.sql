@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS communications (
 
 -- Insert default admin user (username: admin, password: admin123)
 INSERT INTO users (username, email, password_hash, role, full_name, status) 
-VALUES ('admin', 'admin@purbachalvalley.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'System Administrator', 'active');
+VALUES ('admin', 'admin@purbachalvalley.com', '$2y$10$2JD2r38a03AUbhRWQaNEB.9czCr3oQMqC0o.GbPay5CMPwajngHle', 'admin', 'System Administrator', 'active');
 
 -- Insert default settings
 INSERT INTO settings (setting_key, setting_value, description) VALUES
