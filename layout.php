@@ -9,7 +9,7 @@ $userFullName = $_SESSION['full_name'] ?? 'User';
 $currentPage = basename($_SERVER['PHP_SELF']);
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
-$assetVersion = '20260626c';
+$assetVersion = '20260630b';
 ?>
 <!DOCTYPE html>
 <html lang="en">

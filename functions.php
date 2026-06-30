@@ -107,6 +107,70 @@ function getTotalProjects() {
     return $stmt->fetch()['total'] ?? 0;
 }
 
+function getAssignableProjects() {
+    global $pdo;
+    return $pdo->query("SELECT id, project_name, project_code FROM projects ORDER BY project_name")->fetchAll();
+}
+
+function normalizeProjectIds($projectIds) {
+    if (!is_array($projectIds)) {
+        return [];
+    }
+
+    $normalized = [];
+    foreach ($projectIds as $projectId) {
+        $projectId = (int) $projectId;
+        if ($projectId > 0) {
+            $normalized[] = $projectId;
+        }
+    }
+
+    return array_values(array_unique($normalized));
+}
+
+function validateProjectIds(array $projectIds) {
+    global $pdo;
+    if (empty($projectIds)) {
+        return false;
+    }
+
+    $placeholders = implode(',', array_fill(0, count($projectIds), '?'));
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM projects WHERE id IN ($placeholders)");
+    $stmt->execute($projectIds);
+    return (int) ($stmt->fetch()['total'] ?? 0) === count($projectIds);
+}
+
+function syncMemberProjects($memberId, array $projectIds, $assignedBy = null) {
+    global $pdo;
+
+    $deleteStmt = $pdo->prepare("DELETE FROM member_projects WHERE member_id = ?");
+    $deleteStmt->execute([$memberId]);
+
+    if (empty($projectIds)) {
+        return;
+    }
+
+    $insertStmt = $pdo->prepare("INSERT INTO member_projects (member_id, project_id, assigned_by) VALUES (?, ?, ?)");
+    foreach ($projectIds as $projectId) {
+        $insertStmt->execute([$memberId, $projectId, $assignedBy]);
+    }
+}
+
+function getMemberAssignedProjects($memberId) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT p.id, p.project_name, p.project_code
+        FROM member_projects mp
+        INNER JOIN projects p ON p.id = mp.project_id
+        WHERE mp.member_id = ?
+        ORDER BY p.project_name");
+    $stmt->execute([$memberId]);
+    return $stmt->fetchAll();
+}
+
+function getMemberAssignedProjectIds($memberId) {
+    return array_map('intval', array_column(getMemberAssignedProjects($memberId), 'id'));
+}
+
 function formatCurrency($amount) {
     $symbol = getSetting('currency_symbol', 'Tk');
     return $symbol . ' ' . number_format($amount, 2);

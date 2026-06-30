@@ -67,6 +67,7 @@ $recentPayments = [];
 $totalInvestment = 0;
 $totalPaid = 0;
 $due = 0;
+$assignedProjects = [];
 
 if ($currentUserRole === 'member') {
     $memberStmt = $pdo->prepare("SELECT * FROM members WHERE user_id = ?");
@@ -77,6 +78,7 @@ if ($currentUserRole === 'member') {
         $totalInvestment = getMemberTotalInvestment($member['id']);
         $totalPaid = getMemberTotalPaid($member['id']);
         $due = $totalInvestment - $totalPaid;
+        $assignedProjects = getMemberAssignedProjects($member['id']);
 
         $paymentsStmt = $pdo->prepare("SELECT p.*, pr.project_name
             FROM payments p
@@ -191,6 +193,20 @@ require_once 'layout.php';
                         <tr><th>Status</th><td><?php echo sanitize(ucfirst($member['member_status'] ?? 'N/A')); ?></td></tr>
                         <tr><th>KYC Status</th><td><?php echo sanitize(ucfirst($member['kyc_status'] ?? 'N/A')); ?></td></tr>
                         <tr><th>Investment Type</th><td><?php echo sanitize(ucfirst($member['investment_type'] ?? 'N/A')); ?></td></tr>
+                        <tr>
+                            <th>Project</th>
+                            <td>
+                                <?php if (empty($assignedProjects)): ?>
+                                    N/A
+                                <?php else: ?>
+                                    <div class="project-badge-list">
+                                        <?php foreach ($assignedProjects as $project): ?>
+                                            <span class="badge bg-info"><?php echo sanitize($project['project_name']); ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
                         <tr><th>Registration Date</th><td><?php echo !empty($member['registration_date']) ? formatDate($member['registration_date']) : 'N/A'; ?></td></tr>
                         <tr><th>Account Username</th><td><?php echo sanitize($user['username']); ?></td></tr>
                     </tbody>

@@ -28,6 +28,51 @@
                 });
             });
 
+            document.querySelectorAll('[data-checkbox-picker]').forEach(function(picker) {
+                const label = picker.querySelector('[data-picker-label]');
+                const toggle = picker.querySelector('.project-picker-toggle');
+                const checkboxes = picker.querySelectorAll('input[type="checkbox"]');
+                const form = picker.closest('form');
+
+                const updatePickerLabel = function() {
+                    const selected = Array.from(checkboxes).filter(function(checkbox) {
+                        return checkbox.checked;
+                    });
+
+                    if (selected.length === 0) {
+                        label.textContent = 'Select Project';
+                    } else if (selected.length === 1) {
+                        label.textContent = selected[0].closest('label').querySelector('.form-check-label').textContent.trim();
+                    } else {
+                        label.textContent = selected.length + ' projects selected';
+                    }
+
+                    if (selected.length > 0) {
+                        toggle.classList.remove('is-invalid');
+                    }
+                };
+
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', updatePickerLabel);
+                });
+
+                if (form && picker.dataset.required === 'true') {
+                    form.addEventListener('submit', function(event) {
+                        const hasSelection = Array.from(checkboxes).some(function(checkbox) {
+                            return checkbox.checked;
+                        });
+
+                        if (!hasSelection) {
+                            event.preventDefault();
+                            toggle.classList.add('is-invalid');
+                            toggle.focus();
+                        }
+                    });
+                }
+
+                updatePickerLabel();
+            });
+
             const sidebarToggle = document.querySelector('[data-sidebar-toggle]');
             const sidebarCloseTargets = document.querySelectorAll('[data-sidebar-close], .sidebar a');
             const setSidebarOpen = function(isOpen) {

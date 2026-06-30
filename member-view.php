@@ -26,6 +26,7 @@ $recentPayments = $payments->fetchAll();
 $totalInvestment = getMemberTotalInvestment($memberId);
 $totalPaid = getMemberTotalPaid($memberId);
 $due = $totalInvestment - $totalPaid;
+$assignedProjects = getMemberAssignedProjects($memberId);
 
 $pageTitle = 'Member Profile';
 require_once 'layout.php';
@@ -112,6 +113,20 @@ require_once 'layout.php';
                         <tr><th>Status</th><td><span class="badge bg-success"><?php echo sanitize(ucfirst($member['member_status'])); ?></span></td></tr>
                         <tr><th>KYC Status</th><td><?php echo sanitize(ucfirst($member['kyc_status'] ?: 'Pending')); ?></td></tr>
                         <tr><th>Investment Type</th><td><?php echo sanitize(ucfirst($member['investment_type'] ?: 'Individual')); ?></td></tr>
+                        <tr>
+                            <th>Project</th>
+                            <td>
+                                <?php if (empty($assignedProjects)): ?>
+                                    N/A
+                                <?php else: ?>
+                                    <div class="project-badge-list">
+                                        <?php foreach ($assignedProjects as $project): ?>
+                                            <span class="badge bg-info"><?php echo sanitize($project['project_name']); ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
                         <tr><th>Registration Date</th><td><?php echo $member['registration_date'] ? formatDate($member['registration_date']) : 'N/A'; ?></td></tr>
                     </tbody>
                 </table>

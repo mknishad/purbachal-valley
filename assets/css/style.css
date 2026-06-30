@@ -503,6 +503,61 @@ a:hover {
     padding-top: 8px;
 }
 
+.project-badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.checkbox-picker {
+    position: relative;
+}
+
+.project-picker-toggle {
+    display: flex;
+    align-items: center;
+    color: var(--ink);
+}
+
+.project-picker-toggle span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-picker-menu {
+    max-height: 260px;
+    overflow-y: auto;
+    border-color: var(--line);
+    box-shadow: var(--shadow-md);
+}
+
+.project-picker-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 38px;
+    margin: 0;
+    color: var(--ink);
+    white-space: normal;
+}
+
+.project-picker-option:hover,
+.project-picker-option:focus {
+    background: rgba(24, 90, 66, 0.08);
+}
+
+.project-picker-option .form-check-input {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.project-picker-option .form-check-input:checked {
+    background-color: var(--brand-green);
+    border-color: var(--brand-green);
+}
+
 .alert {
     border-radius: 8px;
     border-width: 1px;

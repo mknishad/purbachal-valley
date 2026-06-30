@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nomineePhone = sanitize($_POST['nominee_phone'] ?? '');
     $memberStatus = sanitize($_POST['member_status'] ?? 'active');
     $kycStatus = sanitize($_POST['kyc_status'] ?? 'pending');
+    $projectIds = normalizeProjectIds($_POST['project_ids'] ?? []);
 
     $requiredFields = [
         $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
@@ -54,6 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['error'] = 'Please fill all required fields';
             redirect(BASE_URL . '/member-edit.php?id=' . $memberId);
         }
+    }
+
+    if (empty($projectIds)) {
+        $_SESSION['error'] = 'Please assign at least one project';
+        redirect(BASE_URL . '/member-edit.php?id=' . $memberId);
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -80,27 +86,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $stmt = $pdo->prepare("UPDATE members SET
-        first_name = ?, last_name = ?, father_name = ?, mother_name = ?, gender = ?, date_of_birth = ?,
-        nid_number = ?, email = ?, phone = ?, alternative_phone = ?, present_address = ?, permanent_address = ?,
-        occupation = ?, employer_name = ?, investment_type = ?, nominee_name = ?, nominee_relation = ?,
-        nominee_nid = ?, nominee_phone = ?, member_status = ?, kyc_status = ?
-        WHERE id = ?");
+    if (!validateProjectIds($projectIds)) {
+        $_SESSION['error'] = 'Please select valid projects';
+        redirect(BASE_URL . '/member-edit.php?id=' . $memberId);
+    }
 
-    $stmt->execute([
-        $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
-        $nidNumber, $email, $phone, $alternativePhone, $presentAddress, $permanentAddress,
-        $occupation, $employerName, $investmentType, $nomineeName, $nomineeRelation,
-        $nomineeNid, $nomineePhone, $memberStatus, $kycStatus, $memberId
-    ]);
+    $pdo->beginTransaction();
+    try {
+        $stmt = $pdo->prepare("UPDATE members SET
+            first_name = ?, last_name = ?, father_name = ?, mother_name = ?, gender = ?, date_of_birth = ?,
+            nid_number = ?, email = ?, phone = ?, alternative_phone = ?, present_address = ?, permanent_address = ?,
+            occupation = ?, employer_name = ?, investment_type = ?, nominee_name = ?, nominee_relation = ?,
+            nominee_nid = ?, nominee_phone = ?, member_status = ?, kyc_status = ?
+            WHERE id = ?");
 
-    logAudit('UPDATE', 'members', $memberId, $member);
+        $stmt->execute([
+            $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
+            $nidNumber, $email, $phone, $alternativePhone, $presentAddress, $permanentAddress,
+            $occupation, $employerName, $investmentType, $nomineeName, $nomineeRelation,
+            $nomineeNid, $nomineePhone, $memberStatus, $kycStatus, $memberId
+        ]);
+
+        syncMemberProjects($memberId, $projectIds, getCurrentUserId());
+        logAudit('UPDATE', 'members', $memberId, $member);
+        $pdo->commit();
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $_SESSION['error'] = 'Failed to update member';
+        redirect(BASE_URL . '/member-edit.php?id=' . $memberId);
+    }
 
     $_SESSION['success'] = 'Member updated successfully';
     redirect(BASE_URL . '/member-view.php?id=' . $memberId);
 }
 
 $pageTitle = 'Edit Member';
+$projects = getAssignableProjects();
+$assignedProjectIds = getMemberAssignedProjectIds($memberId);
 require_once 'layout.php';
 ?>
 
@@ -184,6 +206,25 @@ require_once 'layout.php';
                     <option value="group" <?php echo $member['investment_type'] === 'group' ? 'selected' : ''; ?>>Group</option>
                     <option value="organization" <?php echo $member['investment_type'] === 'organization' ? 'selected' : ''; ?>>Organization</option>
                 </select>
+            </div>
+            <div class="col-md-8">
+                <label class="form-label">Project *</label>
+                <div class="dropdown checkbox-picker" data-checkbox-picker data-required="true">
+                    <button type="button" class="form-select project-picker-toggle text-start" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                        <span data-picker-label>Select Project</span>
+                    </button>
+                    <div class="dropdown-menu project-picker-menu w-100">
+                        <?php foreach ($projects as $project): ?>
+                        <label class="dropdown-item form-check project-picker-option">
+                            <input type="checkbox" name="project_ids[]" class="form-check-input" value="<?php echo $project['id']; ?>" <?php echo in_array((int) $project['id'], $assignedProjectIds, true) ? 'checked' : ''; ?>>
+                            <span class="form-check-label">
+                                <?php echo sanitize($project['project_name'] . ($project['project_code'] ? ' (' . $project['project_code'] . ')' : '')); ?>
+                            </span>
+                        </label>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="invalid-feedback">Please select at least one project.</div>
+                </div>
             </div>
             <div class="col-md-4">
                 <label class="form-label">Member Status *</label>

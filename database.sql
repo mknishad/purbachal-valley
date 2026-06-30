@@ -110,7 +110,20 @@ CREATE TABLE IF NOT EXISTS members (
     FOREIGN KEY (group_leader_id) REFERENCES members(id) ON DELETE SET NULL
 );
 
--- 6. Member Investment Plans
+-- 6. Member Project Assignments
+CREATE TABLE IF NOT EXISTS member_projects (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    member_id INT NOT NULL,
+    project_id INT NOT NULL,
+    assigned_by INT,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_member_project (member_id, project_id),
+    FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    FOREIGN KEY (assigned_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- 7. Member Investment Plans
 CREATE TABLE IF NOT EXISTS investment_plans (
     id INT PRIMARY KEY AUTO_INCREMENT,
     member_id INT NOT NULL,
@@ -129,7 +142,7 @@ CREATE TABLE IF NOT EXISTS investment_plans (
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
--- 7. Payment Transactions / Contributions
+-- 8. Payment Transactions / Contributions
 CREATE TABLE IF NOT EXISTS payments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     payment_number VARCHAR(50) UNIQUE,
@@ -163,7 +176,7 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- 8. Payment Receipts
+-- 9. Payment Receipts
 CREATE TABLE IF NOT EXISTS receipts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     receipt_number VARCHAR(50) UNIQUE,
@@ -180,7 +193,7 @@ CREATE TABLE IF NOT EXISTS receipts (
     FOREIGN KEY (printed_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- 9. Member Allocations (Plot/Unit Allocation)
+-- 10. Member Allocations (Plot/Unit Allocation)
 CREATE TABLE IF NOT EXISTS allocations (
     id INT PRIMARY KEY AUTO_INCREMENT,
     member_id INT NOT NULL,
@@ -203,7 +216,7 @@ CREATE TABLE IF NOT EXISTS allocations (
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- 10. Documents
+-- 11. Documents
 CREATE TABLE IF NOT EXISTS documents (
     id INT PRIMARY KEY AUTO_INCREMENT,
     document_type ENUM('member_id', 'land_deed', 'agreement', 'noc', 'payment_receipt', 'legal', 'other') NOT NULL,
@@ -224,7 +237,7 @@ CREATE TABLE IF NOT EXISTS documents (
     FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- 11. Expenses
+-- 12. Expenses
 CREATE TABLE IF NOT EXISTS expenses (
     id INT PRIMARY KEY AUTO_INCREMENT,
     expense_number VARCHAR(50) UNIQUE,
@@ -246,7 +259,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- 12. Notifications
+-- 13. Notifications
 CREATE TABLE IF NOT EXISTS notifications (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -264,7 +277,7 @@ CREATE TABLE IF NOT EXISTS notifications (
     FOREIGN KEY (member_id) REFERENCES members(id) ON DELETE CASCADE
 );
 
--- 13. Audit Logs
+-- 14. Audit Logs
 CREATE TABLE IF NOT EXISTS audit_logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -279,7 +292,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- 14. Settings
+-- 15. Settings
 CREATE TABLE IF NOT EXISTS settings (
     id INT PRIMARY KEY AUTO_INCREMENT,
     setting_key VARCHAR(100) UNIQUE NOT NULL,
@@ -288,7 +301,7 @@ CREATE TABLE IF NOT EXISTS settings (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 15. SMS/Email Log
+-- 16. SMS/Email Log
 CREATE TABLE IF NOT EXISTS communications (
     id INT PRIMARY KEY AUTO_INCREMENT,
     member_id INT,

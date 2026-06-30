@@ -19,6 +19,10 @@ $orgName = 'MR PURBACHAL VALLEY';
 $orgAddress = 'Dhaka, Bangladesh';
 
 require_once 'functions.php';
+$assignedProjects = getMemberAssignedProjects($memberId);
+$assignedProjectNames = array_map(function ($project) {
+    return $project['project_name'];
+}, $assignedProjects);
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +90,7 @@ require_once 'functions.php';
             <tr><td>Permanent Address</td><td><?php echo $member['permanent_address'] ?: 'N/A'; ?></td></tr>
             <tr><td>Occupation</td><td><?php echo $member['occupation'] ?: 'N/A'; ?></td></tr>
             <tr><td>Investment Type</td><td><?php echo ucfirst($member['investment_type'] ?: 'Individual'); ?></td></tr>
+            <tr><td>Project</td><td><?php echo $assignedProjectNames ? implode(', ', array_map('sanitize', $assignedProjectNames)) : 'N/A'; ?></td></tr>
         </table>
         
         <div class="section-title">Nominee Information</div>

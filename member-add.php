@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nomineeNid = sanitize($_POST['nominee_nid'] ?? '');
     $nomineePhone = sanitize($_POST['nominee_phone'] ?? '');
     $password = $_POST['password'] ?? '';
+    $projectIds = normalizeProjectIds($_POST['project_ids'] ?? []);
     
     $requiredFields = [
         $firstName, $lastName, $fatherName, $motherName, $gender, $dateOfBirth,
@@ -38,6 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['error'] = 'Please fill all required fields';
             redirect(BASE_URL . '/member-add.php');
         }
+    }
+
+    if (empty($projectIds)) {
+        $_SESSION['error'] = 'Please assign at least one project';
+        redirect(BASE_URL . '/member-add.php');
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -74,6 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['error'] = 'A member with this email or phone already exists';
         redirect(BASE_URL . '/member-add.php');
     }
+
+    if (!validateProjectIds($projectIds)) {
+        $_SESSION['error'] = 'Please select valid projects';
+        redirect(BASE_URL . '/member-add.php');
+    }
     
     $membershipNumber = generateMembershipNumber();
     $fullName = trim($firstName . ' ' . $lastName);
@@ -99,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $memberId = $pdo->lastInsertId();
+        syncMemberProjects($memberId, $projectIds, getCurrentUserId());
         logAudit('CREATE', 'members', $memberId);
         logAudit('CREATE', 'users', $userId);
         $pdo->commit();
@@ -113,6 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = 'Add New Member';
+$projects = getAssignableProjects();
 require_once 'layout.php';
 ?>
 
@@ -191,6 +204,25 @@ require_once 'layout.php';
                             <option value="group">Group</option>
                             <option value="organization">Organization</option>
                         </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Project *</label>
+                        <div class="dropdown checkbox-picker" data-checkbox-picker data-required="true">
+                            <button type="button" class="form-select project-picker-toggle text-start" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                <span data-picker-label>Select Project</span>
+                            </button>
+                            <div class="dropdown-menu project-picker-menu w-100">
+                                <?php foreach ($projects as $project): ?>
+                                <label class="dropdown-item form-check project-picker-option">
+                                    <input type="checkbox" name="project_ids[]" class="form-check-input" value="<?php echo $project['id']; ?>">
+                                    <span class="form-check-label">
+                                        <?php echo sanitize($project['project_name'] . ($project['project_code'] ? ' (' . $project['project_code'] . ')' : '')); ?>
+                                    </span>
+                                </label>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="invalid-feedback">Please select at least one project.</div>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Present Address *</label>
