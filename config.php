@@ -10,7 +10,16 @@ define('DB_NAME', 'purbachal_valley');
 define('DB_USER', 'root');
 define('DB_PASS', 'root');
 
-define('BASE_URL', 'http://localhost:8888/purbachal-valley');
+$isHttps = (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+);
+$scheme = $isHttps ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost:8888';
+$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/purbachal-valley/index.php'));
+$appBasePath = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
+
+define('BASE_URL', $scheme . '://' . $host . $appBasePath);
 
 define('TIMEZONE', 'Asia/Dhaka');
 date_default_timezone_set(TIMEZONE);

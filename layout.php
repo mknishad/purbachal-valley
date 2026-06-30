@@ -7,8 +7,6 @@ $currentUserId = getCurrentUserId();
 $currentUserRole = getCurrentUserRole();
 $userFullName = $_SESSION['full_name'] ?? 'User';
 $currentPage = basename($_SERVER['PHP_SELF']);
-$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-$assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
 $assetVersion = '20260630e';
 ?>
 <!DOCTYPE html>
@@ -17,10 +15,10 @@ $assetVersion = '20260630e';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $pageTitle ?? 'Dashboard' ?> - MR PURBACHAL VALLEY</title>
-    <link href="<?= htmlspecialchars($assetBase . '/assets/vendor/bootstrap/css/bootstrap.min.css?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>" rel="stylesheet">
+    <link href="<?= htmlspecialchars('assets/vendor/bootstrap/css/bootstrap.min.css?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="<?= htmlspecialchars($assetBase . '/assets/css/style.css?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>">
+    <link rel="stylesheet" href="<?= htmlspecialchars('assets/css/style.css?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>">
 </head>
 <body>
     <div class="container-fluid app-shell">

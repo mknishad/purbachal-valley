@@ -2,7 +2,7 @@
             </main>
         </div>
     </div>
-    <script src="<?= htmlspecialchars($assetBase . '/assets/vendor/bootstrap/js/bootstrap.bundle.min.js?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>"></script>
+    <script src="<?= htmlspecialchars('assets/vendor/bootstrap/js/bootstrap.bundle.min.js?v=' . $assetVersion, ENT_QUOTES, 'UTF-8') ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
