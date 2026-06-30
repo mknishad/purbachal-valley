@@ -44,7 +44,7 @@ require_once 'layout.php';
     </div>
 </div>
 
-<div class="row mb-4">
+<div class="row g-3 mb-4">
     <div class="col-md-4">
         <div class="card stat-card blue">
             <div class="card-body">
@@ -71,12 +71,12 @@ require_once 'layout.php';
     </div>
 </div>
 
-<div class="row">
+<div class="row g-3">
     <div class="col-lg-7">
         <div class="card">
             <div class="card-header"><h5 class="mb-0">Personal Information</h5></div>
             <div class="card-body p-0">
-                <table class="table mb-0">
+                <table class="table detail-table mb-0">
                     <tbody>
                         <tr><th>Father's Name</th><td><?php echo sanitize($member['father_name'] ?: 'N/A'); ?></td></tr>
                         <tr><th>Mother's Name</th><td><?php echo sanitize($member['mother_name'] ?: 'N/A'); ?></td></tr>
@@ -108,7 +108,7 @@ require_once 'layout.php';
         <div class="card">
             <div class="card-header"><h5 class="mb-0">Membership</h5></div>
             <div class="card-body p-0">
-                <table class="table mb-0">
+                <table class="table detail-table mb-0">
                     <tbody>
                         <tr><th>Status</th><td><span class="badge bg-success"><?php echo sanitize(ucfirst($member['member_status'])); ?></span></td></tr>
                         <tr><th>KYC Status</th><td><?php echo sanitize(ucfirst($member['kyc_status'] ?: 'Pending')); ?></td></tr>
@@ -136,7 +136,7 @@ require_once 'layout.php';
         <div class="card">
             <div class="card-header"><h5 class="mb-0">Nominee</h5></div>
             <div class="card-body p-0">
-                <table class="table mb-0">
+                <table class="table detail-table mb-0">
                     <tbody>
                         <tr><th>Name</th><td><?php echo sanitize($member['nominee_name'] ?: 'N/A'); ?></td></tr>
                         <tr><th>Relation</th><td><?php echo sanitize($member['nominee_relation'] ?: 'N/A'); ?></td></tr>
@@ -150,27 +150,29 @@ require_once 'layout.php';
         <div class="card">
             <div class="card-header"><h5 class="mb-0">Recent Payments</h5></div>
             <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($recentPayments)): ?>
-                            <tr><td colspan="3" class="text-muted text-center py-4">No payments found</td></tr>
-                        <?php endif; ?>
-                        <?php foreach ($recentPayments as $payment): ?>
-                        <tr>
-                            <td><?php echo formatDate($payment['payment_date']); ?></td>
-                            <td><?php echo formatCurrency($payment['amount']); ?></td>
-                            <td><?php echo sanitize(ucfirst($payment['approval_status'])); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($recentPayments)): ?>
+                                <tr><td colspan="3" class="text-muted text-center py-4">No payments found</td></tr>
+                            <?php endif; ?>
+                            <?php foreach ($recentPayments as $payment): ?>
+                            <tr>
+                                <td><?php echo formatDate($payment['payment_date']); ?></td>
+                                <td><?php echo formatCurrency($payment['amount']); ?></td>
+                                <td><?php echo sanitize(ucfirst($payment['approval_status'])); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

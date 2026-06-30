@@ -52,7 +52,7 @@ if ($currentUserRole === 'member') {
         <div class="alert alert-warning">No member profile is linked to your user account yet.</div>
     <?php endif; ?>
 
-    <div class="row mb-4">
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
             <div class="card stat-card blue">
                 <div class="card-body d-flex justify-content-between align-items-start">
@@ -88,12 +88,12 @@ if ($currentUserRole === 'member') {
         </div>
     </div>
 
-    <div class="row">
+    <div class="row g-3">
         <div class="col-lg-5">
             <div class="card">
                 <div class="card-header"><h5 class="mb-0">My Member Profile</h5></div>
                 <div class="card-body p-0">
-                    <table class="table mb-0">
+                    <table class="table detail-table mb-0">
                         <tbody>
                             <tr><th>Membership</th><td><?php echo sanitize($member['membership_number'] ?? 'N/A'); ?></td></tr>
                             <tr><th>Name</th><td><?php echo sanitize(trim(($member['first_name'] ?? '') . ' ' . ($member['last_name'] ?? '')) ?: 'N/A'); ?></td></tr>

@@ -107,7 +107,7 @@ require_once 'layout.php';
 <?php if (!$member): ?>
     <div class="alert alert-warning">No member profile is linked to your user account yet.</div>
 <?php else: ?>
-    <div class="row mb-4">
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
             <div class="card stat-card blue">
                 <div class="card-body">
@@ -135,12 +135,12 @@ require_once 'layout.php';
     </div>
 <?php endif; ?>
 
-<div class="row">
+<div class="row g-3">
     <div class="col-lg-7">
         <div class="card">
             <div class="card-header"><h5 class="mb-0">Personal Information</h5></div>
             <div class="card-body p-0">
-                <table class="table mb-0">
+                <table class="table detail-table mb-0">
                     <tbody>
                         <tr><th>Membership</th><td><?php echo sanitize($member['membership_number'] ?? 'N/A'); ?></td></tr>
                         <tr><th>Full Name</th><td><?php echo sanitize($member ? trim($member['first_name'] . ' ' . $member['last_name']) : $user['full_name']); ?></td></tr>
@@ -172,7 +172,7 @@ require_once 'layout.php';
         <div class="card">
             <div class="card-header"><h5 class="mb-0">Nominee Information</h5></div>
             <div class="card-body p-0">
-                <table class="table mb-0">
+                <table class="table detail-table mb-0">
                     <tbody>
                         <tr><th>Name</th><td><?php echo sanitize($member['nominee_name'] ?? 'N/A'); ?></td></tr>
                         <tr><th>Relation</th><td><?php echo sanitize($member['nominee_relation'] ?? 'N/A'); ?></td></tr>
@@ -188,7 +188,7 @@ require_once 'layout.php';
         <div class="card">
             <div class="card-header"><h5 class="mb-0">Membership</h5></div>
             <div class="card-body p-0">
-                <table class="table mb-0">
+                <table class="table detail-table mb-0">
                     <tbody>
                         <tr><th>Status</th><td><?php echo sanitize(ucfirst($member['member_status'] ?? 'N/A')); ?></td></tr>
                         <tr><th>KYC Status</th><td><?php echo sanitize(ucfirst($member['kyc_status'] ?? 'N/A')); ?></td></tr>
